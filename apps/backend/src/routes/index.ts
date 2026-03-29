@@ -1,4 +1,4 @@
-import { betterAuth } from '$lib/better-auth'
+import { betterAuth } from '$lib/plugin/better-auth'
 import Elysia from 'elysia'
 
 export const route = new Elysia()

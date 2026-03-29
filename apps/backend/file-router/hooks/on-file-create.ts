@@ -30,7 +30,7 @@ type Stats = {
 }
 
 const defaultTemplate = `import Elysia from 'elysia'
-import { betterAuth } from '$lib/better-auth'
+import { betterAuth } from '$lib/plugin/better-auth'
 
 export const route = new Elysia()
 	.use(betterAuth)
@@ -40,7 +40,7 @@ export const route = new Elysia()
 `
 
 const groupTemplateStart = `import Elysia, { t } from 'elysia'
-import { betterAuth } from '$lib/better-auth'
+import { betterAuth } from '$lib/plugin/better-auth'
 
 export const route = new Elysia()
 	.use(betterAuth)`
@@ -55,7 +55,7 @@ const generateGroupTemplate = ({ params }: { params?: string }) => {
 		config += ','
 	}
 	return `${groupTemplateStart}
-	.group("/", ${config} app => app.get('/', async ({ params }) => {
+	.group("", ${config} app => app.get('/', async ({ params }) => {
 		return 'hello'
 	})
 )
@@ -79,6 +79,8 @@ export const onFileCreate = async (path: string, stats?: Stats) => {
 
 	if ((await file.text()) === '') {
 		await file.write(template)
+
+		console.log(await Bun.$`bunx prettier --write ${path}`)
 	}
 }
 

@@ -11,6 +11,7 @@ const paths = await OpenAPI.getPaths()
 
 export const createApp = () =>
 	new Elysia()
+		.use(logger())
 		.use(
 			cors({
 				origin: [Bun.env.APP_URL!],
@@ -29,4 +30,3 @@ export const createApp = () =>
 			}),
 		)
 		.mount(auth.handler)
-		.use(logger())

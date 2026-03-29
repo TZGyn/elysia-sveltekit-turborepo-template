@@ -112,7 +112,10 @@ function clearScreen() {
 let app = createApp()
 app.use(await fileRouter())
 
-const server = Bun.serve({ fetch: app.fetch })
+const server = Bun.serve({
+	fetch: app.fetch,
+	port: Bun.env.PORT ?? 3000,
+})
 
 const reloadServer = async () => {
 	if ('cron' in app.store) {
