@@ -29,36 +29,24 @@ type Stats = {
 	birthtime: Date
 }
 
-const defaultTemplate = `import Elysia from 'elysia'
-import { betterAuth } from '$lib/plugin/better-auth'
-
-export const route = new Elysia()
-	.use(betterAuth)
-	.get('/', async () => {
-		return 'hello'
-	})
-`
-
-const groupTemplateStart = `import Elysia, { t } from 'elysia'
-import { betterAuth } from '$lib/plugin/better-auth'
-
-export const route = new Elysia()
-	.use(betterAuth)`
-
-const generateGroupTemplate = ({ params }: { params?: string }) => {
+const generateTemplate = ({ params }: { params?: string }) => {
 	let config = ''
 	if (params) {
 		config += `{ params: ${params} }`
 	}
 
 	if (config.length > 0) {
-		config += ','
+		config = ',' + config
 	}
-	return `${groupTemplateStart}
-	.group("", ${config} app => app.get('/', async ({ params }) => {
+
+	return `import Elysia from 'elysia'
+import { betterAuth } from '$lib/plugin/better-auth'
+
+export const route = new Elysia()
+	.use(betterAuth)
+	.get('/', async () => {
 		return 'hello'
-	})
-)
+	}${config})
 `
 }
 
@@ -71,11 +59,7 @@ export const onFileCreate = async (path: string, stats?: Stats) => {
 
 	let template: string
 
-	if (params.length > 0) {
-		template = generateGroupTemplate({ params: paramsTemplate })
-	} else {
-		template = defaultTemplate
-	}
+	template = generateTemplate({ params: paramsTemplate })
 
 	if ((await file.text()) === '') {
 		await file.write(template)
