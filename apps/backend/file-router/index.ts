@@ -147,12 +147,20 @@ const watch = () => {
 				delete require.cache[path]
 			}
 
-			await reloadServer()
+			try {
+				await reloadServer()
+			} catch (error) {
+				console.error(error)
+			}
 		})
 		.on('add', async (path, stats) => {
 			console.log(path, stats)
 
-			await onFileCreate(path, stats)
+			try {
+				await onFileCreate(path, stats)
+			} catch (error) {
+				console.error(error)
+			}
 		})
 
 	chokidar
@@ -164,7 +172,11 @@ const watch = () => {
 				delete require.cache[path]
 			}
 
-			await reloadServer()
+			try {
+				await reloadServer()
+			} catch (error) {
+				console.error(error)
+			}
 		})
 }
 
